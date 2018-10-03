@@ -1,0 +1,38 @@
+.load-progress {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.fade-away {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transition: 1s;
+  opacity: 0;
+}
+
+.powered-by img {
+  width: 100px;
+}
+
+.powered-by {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  text-align: center;
+  transform: scale(0.5);
+  -ms-transform: scale(0.5);
+  -webkit-transform: scale(0.5);
+  -o-transform: scale(0.5);
+  -moz-transform: scale(0.5);
+  pointer-events: none;
+}

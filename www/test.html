@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shed 3D viewer test page</title>
+    <script>var test = true;</script>
+    <script
+    src="https://code.jquery.com/jquery-3.2.1.min.js"
+    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.5.1/js/bootstrap-colorpicker.min.js"></script>
+    <script src="js/viewer3D.js"></script>
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.5.1/css/bootstrap-colorpicker.min.css"/>
+    <link rel="stylesheet"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" data-cfasync="false"
+    href="css/viewer3D.css"/>
+    <style>
+        /*body {
+            background-color: #555;
+        }*/
+
+        .controls {
+            /*display: inline-block;
+            vertical-align: top;
+            padding-top: 100px;
+            padding-left: 20px;
+            max-height: 400px;
+            overflow: auto;*/
+            background-color: #fff;
+        }
+
+        .viewer-3d {
+            display: inline-block;
+        }
+
+        .item {
+            width: 100px;
+            height: 100px;
+            display: inline-block;
+        }
+
+        .item img {
+            width: 100px;
+            height: 100px;
+        }
+
+        img.roof-item {
+            width: 75px;
+            cursor: pointer;
+        }
+        span.top {
+            color: white;
+            padding-left: 10px;
+        }
+
+        div.roof-item {
+            width: 75px;
+            height: 75px;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        div.colors-item , div.trim-colors-item {
+            width: 110px;
+            height: 55px;
+            display: inline-block;
+            cursor: pointer;
+            margin: 5px;
+        }
+        img{
+            width:100%;
+        }
+        .viewer-3d{
+            padding-top: 100px;
+        }
+        .topview{
+            /*margin-top: 100px;
+            border: 1px solid;
+            border-color: blue;*/
+            background: #f2f2f2;
+            margin-top: -35px;
+        }
+        .panel-heading.top {
+            background-color: #5d5d5d;
+        }
+        .glyphicon.scolor {
+            color: white;
+        }
+        .tags{
+            color: #fff;
+            font-weight: 700;
+        }
+        .mainpicker{
+            color: #ffa347;
+        }
+        .mainheading{
+            color: #fff;
+        }
+        .btnset{
+           background-color: #5d5d5d;
+           color: #fff;
+       }
+       .label-default.rooftxt{
+        font-size: 16px;
+    }
+    .scroll-view {
+        height: auto;
+        max-height: 240px;
+        overflow-x: hidden;
+    }
+</style>
+</head>
+<body>
+    <div class="topview" style="">
+        <div class="page-header">
+            <table style="margin-left: 20px;">
+                <tbody><tr>
+                    <td style="width: 125px; text-align: left;">
+                        <img src="img/logo.png">
+                    </td>
+                    <td style="text-align: left;">
+                        <div style="font-size: 22px; margin-top: 25px;">
+                            urbanshedconcepts.com<br>
+                            bob@urbanshedconcepts.com<br>
+                            602.320.8350
+                        </div>
+                    </td>
+                </tr>
+            </tbody></table>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7">
+                <div class="viewer-3d"></div>
+                <div class="row">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button class="save btn btn-primary">Save</button>
+                        <button class="load btn btn-success">Load</button>
+                        <button class="full-screen button btn btn-info">Full Screen</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="controls">
+                    <div class="row">
+                        <div class="col-md-offset-2 col-md-11">
+                            <div class="btn-group">
+                                <button class="view-button btn btn-primary" data-type="front">Front</button>
+                                <button class="view-button btn btn-success" data-type="left">Left</button>
+                                <button class="view-button btn btn-info" data-type="back">Back</button>
+                                <button class="view-button btn btn-danger" data-type="right">Right</button>
+                                <button class="view-button btn btn-warning" data-type="top">Plan</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div><input type="checkbox" checked class="show-door"> Show door</div>
+                            <div><input type="checkbox" checked class="show-windows"> Show windows</div>
+                            <div><input type="checkbox" class="show-flower-boxes"> Show flower boxes</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div><input type="checkbox" class="show-shutters"> Show window shutters</div>
+                            <div><input type="checkbox" checked class="show-environemnt"> Show environment</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input class="grass-scale" placeholder="Grass scale, default is 1">
+                            <button class="grass-scale-set">Set</button>
+                        </div>
+                        <div class="col-md-12" style="padding-top:5px">
+                            <input class="grass-count" size="35" placeholder="Grass amount, default is 200000">
+                            <button class="grass-count-set">Set</button>
+                        </div>                            
+                    </div>
+                    <div class="bs-example">
+                        <div class="panel-group" id="accordion" style="margin-top: 20px">
+                            <div class="panel panel-default">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                                    <div class="panel-heading top">
+                                        <h4 class="panel-title">
+                                            <span class="glyphicon glyphicon-plus scolor pull-right"></span>
+                                            <span class="tags">1.</span>
+                                            <span class="mainpicker">Choose your</span>
+                                            <span class="mainheading">DIMENSIONS</span>
+                                        </h4>
+                                    </div>
+                                </a>
+                                <div id="collapseTwo" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                           <div class="btn-group col-md-offset-3">
+                                            <button id="eightdimension" class="btn btnset" width="8" depth="12">8' x 12'</button>
+                                            <button id="tendimension" class="btn btnset" width="10" depth="16">10' x 16'</button>
+                                            <button id="twelvedimension" class="btn btnset" width="12" depth="32">12' x 32'</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="primarykey" maincolor="#b5001a" secondarycolor="#ffffff" style="display:none;"></div>
+                            <div class="panel panel-default">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapsenine">
+                                    <div class="panel-heading top">
+                                        <h4 class="panel-title">
+                                            <span class="glyphicon glyphicon-plus scolor pull-right"></span>
+                                            <span class="tags">2.</span>
+                                            <span class="mainpicker">How should</span>
+                                            <span class="mainheading">BIG MY SHED BE?</span>
+                                        </h4>
+                                    </div>
+                                </a>
+                                <div id="collapsenine" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                    <div class="scroll-view">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="items-2D">
+                                                    <img data-id="2d-atv" class="item2d" draggable="true" src="img/2d/items/atv.png">
+                                                    <div class="text-center">ATV</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="items-2D">
+                                                    <img data-id="2d-bed" class="item2d" draggable="true" src="img/2d/items/bed.png">
+                                                    <div class="text-center">Bed</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="items-2D">
+                                                    <img data-id="2d-bike" class="item2d" draggable="true" src="img/2d/items/bike.png">
+                                                    <div class="text-center">Bike</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="items-2D">
+                                                    <img data-id="2d-computer_table" class="item2d" draggable="true" src="img/2d/items/computer_table.png">
+                                                    <div class="text-center">Computer table</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="items-2D">
+                                                    <img data-id="2d-croquet" class="item2d" draggable="true" src="img/2d/items/croquet.png">
+                                                    <div class="text-center">Croquet</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="items-2D">
+                                                    <img data-id="2d-kf-04" class="item2d" draggable="true" src="img/2d/items/kf-04.png">
+                                                    <div class="text-center">KF-04</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="items-2D">
+                                                    <img data-id="2d-lawn_mower" class="item2d" draggable="true" src="img/2d/items/lawn_mower.png">
+                                                    <div class="text-center">Lawn Mower</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="items-2D">
+                                                    <img data-id="2d-lazyboy" class="item2d" draggable="true" src="img/2d/items/lazyboy.png">
+                                                    <div class="text-center">Lazyboy</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="items-2D">
+                                                    <img data-id="2d-office_desk" class="item2d" draggable="true" src="img/2d/items/office_desk.png">
+                                                    <div class="text-center">Office Desk</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="items-2D">
+                                                    <img data-id="2d-ping_pong" class="item2d" draggable="true" src="img/2d/items/ping_pong.png">
+                                                    <div class="text-center">Ping Pong</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="items-2D">
+                                                    <img data-id="2d-sofa1" class="item2d" draggable="true" src="img/2d/items/sofa1.png">
+                                                    <div class="text-center">Sofa1</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="items-2D">
+                                                    <img data-id="2d-sofa2" class="item2d" draggable="true" src="img/2d/items/sofa2.png">
+                                                    <div class="text-center">Sofa2</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="items-2D">
+                                                    <img data-id="2d-toolbox" class="item2d" draggable="true" src="img/2d/items/toolbox.png">
+                                                    <div class="text-center">Toolbox</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="items-2D">
+                                                    <img data-id="2d-TV" class="item2d" draggable="true" src="img/2d/items/TV.png">
+                                                    <div class="text-center">TV</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="items-2D">
+                                                    <img data-id="2d-wagon" class="item2d" draggable="true" src="img/2d/items/wagon.png">
+                                                    <div class="text-center">Wagon</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="items-2D">
+                                                    <img data-id="2d-wheel_barrow" class="item2d" draggable="true" src="img/2d/items/wheel_barrow.png">
+                                                    <div class="text-center">Wheel Barrow</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="items-2D">
+                                                    <img data-id="2d-work_bench" class="item2d" draggable="true" src="img/2d/items/work_bench.png">
+                                                    <div class="text-center">Work bench</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                                    <div class="panel-heading top">
+                                        <h4 class="panel-title">
+                                            <span class="glyphicon glyphicon-plus scolor pull-right"></span>
+                                            <span class="tags">3.</span>
+                                            <span class="mainpicker">Choose your</span>
+                                            <span class="mainheading">SIDING MATERIAL AND COLORS</span>
+                                        </h4>
+                                    </div>
+                                </a>
+                                <div id="collapseThree" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="colors-item" data-type="Cottage White" color="#e9e9e9" style="background-color: #e9e9e9;"><span class="top">Cottage White</span></div>
+                                                <div class="colors-item" data-type="Scarlet Past" color="#b5001a" style="background-color: #b5001a;"><span class="top">Scarlet Past</span>
+                                                </div>
+                                                <div class="colors-item" data-type="Black Fox" color="#4f4842" style="background-color: #4f4842;"><span class="top">Black Fox</span></div>
+                                                <div class="colors-item" color="#7a8076" data-type="Retreat Green" style="background-color: #7a8076;"><span class="top">Retreat Green</span>
+                                                </div>
+                                                <div class="colors-item" color="#eabf86" data-type="Bees Wax" style="background-color: #eabf86;"><span class="top">Bees Wax</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">
+                                    <div class="panel-heading top">
+                                        <h4 class="panel-title">
+                                            <span class="glyphicon glyphicon-plus scolor pull-right"></span>
+                                            <span class="tags">4.</span>
+                                            <span class="mainpicker">Choose your</span>
+                                            <span class="mainheading">TRIM MATERIAL AND COLORS</span>
+                                        </h4>
+                                    </div>
+                                </a>
+                                <div id="collapseFour" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="trim-colors-item" color="#e9e9e9" data-type="Cottage White" style="background-color: #e9e9e9;"><span class="top">Cottage White</span>
+                                                </div>
+                                                <div class="trim-colors-item" color="#b5001a" data-type="Scarlet Past" style="background-color: #b5001a;"><span class="top">Scarlet Past</span>
+                                                </div>
+                                                <div class="trim-colors-item" color="#4f4842" data-type="Black Fox" style="background-color: #4f4842;">
+                                                <span class="top">Black Fox</span>
+                                                </div>
+                                                <div class="trim-colors-item" color="#7a8076" data-type="Retreat Green" style="background-color: #7a8076;">
+                                                <span class="top">Retreat Green</span>
+                                                </div>
+                                                <div class="trim-colors-item" color="#eabf86" data-type="Bees Wax" style="background-color: #eabf86;">
+                                                <span class="top">Bees Wax</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseSeaven">
+                                    <div class="panel-heading top">
+                                        <h4 class="panel-title">
+                                            <span class="glyphicon glyphicon-plus scolor pull-right"></span>
+                                            <span class="tags">5.</span>
+                                            <span class="mainpicker">Choose your </span>
+                                            <span class="mainheading">ROOF MATERIAL AND COLORS</span>
+                                        </h4>
+                                    </div>
+                                </a>
+                                <div id="collapseSeaven" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <span class="label label-default rooftxt">Shingle Roof Options</span><br>
+                                                <img class="roof-item" data-type="Heritage Rustic Black" src="img/roofs/RusticBlack.jpg">
+                                                <img class="roof-item" data-type="Heritage Black Walnut" src="img/roofs/BlackWalnut.jpg">
+                                                <img class="roof-item" data-type="Heritage Rustic Cedar" src="img/roofs/RusticCedar.jpg">
+                                                <img class="roof-item" data-type="Heritage Mountain Slate" src="img/roofs/MountainSlate.jpg">
+                                            </div>
+                                        </div><br>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <span class="label label-default rooftxt">Metal Roof Options</span><br>
+                                                <div class="roof-item" data-type="Vintage White" style="background-color: #faf9f8;border: 1px solid"></div>
+                                                <div class="roof-item" data-type="Rustic Red" style="background-color: #954333;"></div>
+                                                <div class="roof-item" data-type="Gray" style="background-color: #afb1b4;"></div>
+                                                <div class="roof-item" data-type="Desert Sand" style="background-color: #b1a998;"></div>
+                                                <div class="roof-item" data-type="Coal Black" style="background-color: #08080b;"></div>
+                                                <img class="roof-item" data-type="Galvalume" src="img/roofs/galvalume_item.jpg">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive">
+                                    <div class="panel-heading top">
+                                        <h4 class="panel-title">
+                                            <span class="glyphicon glyphicon-plus scolor pull-right"></span>
+                                            <span class="tags">6.</span>
+                                            <span class="mainpicker">Choose your</span>
+                                            <span class="mainheading">DOORS</span>
+                                        </h4>
+                                    </div>
+                                </a>
+                                <div id="collapseFive" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="scroll-view">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <img data-id="3' Shed Door" class="item" draggable="true" src="img/items/3_Shed_Door.png">
+                                                    <div class="text-center divtext">3' Shed Door</div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <img data-id="3' Shed Door (w-transom)" class="item" draggable="true" src="img/items/3_Shed_Door_w-transom.png">
+                                                    <div class="text-center divtext">3' Shed Door (w-transom)</div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <img data-id="4' Dutch Shed Door" class="item" draggable="true" src="img/items/4_Dutch_Shed_Door.png">
+                                                    <div class="text-center divtext">4' Dutch Shed Door</div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <img data-id="4' Shed Door" class="item" draggable="true" src="img/items/4_Shed_Door.png">
+                                                <div class="text-center divtext">4' Shed Door</div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <img data-id="4' Shed Door (w-transom)" class="item" draggable="true" src="img/items/4_Shed_Door_w-transom.png">
+                                                    <div class="text-center divtext">4' Shed Door (w-transom)</div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <img data-id="6'x7' Roll Up Door" class="item" draggable="true" src="img/items/6x7_Roll_Up_Door.png">
+                                                    <div class="text-center divtext">6'x7' Roll Up Door</div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <img data-id="8'x8' Roll Up Door" class="item" draggable="true" src="img/items/8x8_Roll_Up_Door.png">
+                                                    <div class="text-center divtext">8'x8' Roll Up Door</div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <img data-id="9'x7' Roll Up Door" class="item" draggable="true" src="img/items/9x7_Roll_Up_Door.png">
+                                                    <div class="text-center divtext">9'x7' Roll Up Door</div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <img data-id="15 Light French Doors" class="item" draggable="true" src="img/items/15Light_French_Doors.png">
+                                                    <div class="text-center divtext">15 Light French Doors</div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <img data-id="Double Dutch Shed Door" class="item" draggable="true" src="img/items/Double_Dutch_Shed_Door.png">
+                                                    <div class="text-center divtext">Double Dutch Shed Door</div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <img data-id="Double Shed Door" class="item" draggable="true" src="img/items/Double_Shed_Door.png">
+                                                    <div class="text-center divtext">Double Shed Door</div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <img data-id="Double Shed Door (w-transom)" class="item" draggable="true" src="img/items/Double_Shed_Doors_w-transom.png">
+                                                    <div class="text-center divtext">Double Shed Door (w-transom)</div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <img data-id="Econ Door" class="item" draggable="true" src="img/items/Econ_Door.png">
+                                                    <div class="text-center divtext">Econ Door</div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <img data-id="Steel 9' Light Walk-in Door" class="item" draggable="true" src="img/items/Steel_9Light_Walk-in_Door.png">
+                                                    <div class="text-center divtext">Steel 9' Light Walk-in Door</div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <img data-id="Steel French Doors" class="item" draggable="true" src="img/items/Steel_French_Doors.png">
+                                                    <div class="text-center divtext">Steel French Doors</div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <img data-id="Steel Walk-in Door" class="item" draggable="true" src="img/items/Steel_Walk-in_Door.png">
+                                                    <div class="text-center divtext">Steel Walk-in Door</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                    <div class="panel-heading top">
+                                        <h4 class="panel-title">
+                                            <span class="glyphicon glyphicon-plus scolor pull-right"></span>
+                                            <span class="tags">7.</span>
+                                            <span class="mainpicker">Choose your</span>
+                                            <span class="mainheading">WINDOWS</span>
+                                        </h4>
+                                    </div>
+                                </a>
+                                <div id="collapseOne" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="scroll-view">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <img data-id="1'x1' Loft Window" class="item" draggable="true" src="img/items/1x1_Loft_Window.png">
+                                                    <div class="text-center divtext">1'x1' Loft Window</div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <img data-id="2'x3' Single Pane Window" class="item" draggable="true" src="img/items/2x3_Window.png">
+                                                    <div class="text-center divtext">2'x3' Single Pane Window</div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <img data-id="3'x3' Single Pane Window" class="item" draggable="true" src="img/items/3x3_Window.png">
+                                                    <div class="text-center divtext">3'x3' Single Pane Window</div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <img data-id="29 Transom Window" class="item" draggable="true" src="img/items/29_Transom_Window.png">
+                                                    <div class="text-center divtext">29&quot; Transom Window</div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <img data-id="60 Transom Window" class="item" draggable="true" src="img/items/60_Transom_Window.png">
+                                                    <div class="text-center divtext">60&quot; Transom Window</div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <img data-id="1'x1' Loft Gable Window" class="item" draggable="true" src="img/items/1x1_Loft_Window.png">
+                                                    <div class="text-center divtext">1'x1' Loft Gable Window</div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <img data-id="29 Transom Gable Window" class="item" draggable="true" src="img/items/29_Transom_Window.png">
+                                                    <div class="text-center divtext">29&quot; Transom Gable Window</div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <img data-id="60 Transom Gable Window" class="item" draggable="true" src="img/items/60_Transom_Window.png">
+                                                    <div class="text-center divtext">60&quot; Transom Gable Window</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseSix">
+                                    <div class="panel-heading top">
+                                        <h4 class="panel-title">
+                                            <span class="glyphicon glyphicon-plus scolor pull-right"></span>
+                                            <span class="tags">8.</span>
+                                            <span class="mainpicker">Choose your</span>
+                                            <span class="mainheading">DECK</span>
+                                        </h4>
+                                    </div>
+                                </a>
+                                <div id="collapseSix" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <img data-id="8' x 4' Deck" class="item" draggable="true" src="img/items/Deck8Item.png"><div class="text-center">8' Deck</div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <img data-id="10' x 4' Deck" class="item" draggable="true" src="img/items/Deck10Item.png"><div class="text-center">10' Deck</div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <img data-id="12' x 4' Deck" class="item" draggable="true" src="img/items/Deck12Item.png"><div class="text-center">12' Deck</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    $(document).ready(function(){
+        // Add minus icon for collapse element which is open by default
+        $(".collapse.in").each(function(){
+            $(this).siblings(".panel-heading").find(".glyphicon").addClass("glyphicon-minus").removeClass("glyphicon-plus");
+        });
+
+        // Toggle plus minus icon on show hide of collapse element
+        $(".collapse").on('show.bs.collapse', function(){
+            $(this).parent().find(".glyphicon").removeClass("glyphicon-plus").addClass("glyphicon-minus");
+        }).on('hide.bs.collapse', function(){
+            $(this).parent().find(".glyphicon").removeClass("glyphicon-minus").addClass("glyphicon-plus");
+        });
+    });
+</script>
+</html>

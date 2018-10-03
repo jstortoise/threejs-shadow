@@ -1,0 +1,30 @@
+.context-menu {
+  position: absolute;
+  background: #eee;
+  min-width: 50px;
+  border-radius: 2px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+}
+
+.context-menu-option {
+  padding: 5px 10px;
+  border: 1px solid #eee;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.context-menu-option:hover {
+  border: 1px solid #ccc;
+}
+
+.context-menu-bg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.context-menu-option i {
+  margin-right: 5px;
+}
